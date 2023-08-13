@@ -14,3 +14,8 @@ def test_get_companies():
 def test_get_markets():
     response = client.get("/markets")
     assert response.status_code == 200
+
+
+def test_get_geography():
+    response = client.get("/geography")
+    assert response.status_code == 200
