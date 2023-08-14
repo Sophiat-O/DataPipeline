@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
 
 
-from data_app.orm_read import get_instance
-from data_app.data_connection import get_session
+from data_extract.orm_read import get_instance
+from data_extract.data_connection import get_session
 
 app = FastAPI()
 
