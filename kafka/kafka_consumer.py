@@ -13,9 +13,12 @@ def consume_company_data():
             value_deserializer=lambda x: json.loads(x.decode("utf-8")),
         )
 
+        logger.info("Now Consuming")
+
         for message in consumer:
             company_dict = message.value
             stg_company = create_instance(STGCompany, company_dict)
+
     except Exception:
         logger.exception("An exception as occured, try again later")
 
