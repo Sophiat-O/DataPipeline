@@ -32,4 +32,4 @@ def get_session():
     engine = create_engine(database_url)
     Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-    return database_url
+    return Session
