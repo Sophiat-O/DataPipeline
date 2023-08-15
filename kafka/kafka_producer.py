@@ -1,22 +1,29 @@
-import requests
 import json
+import requests
 from time import sleep
-from json import dumps
+from .kafka_base_logger import logger
 from kafka import KafkaProducer
 
 
 def produce_company_data():
-    request_comapnies = requests.get("localhost:8000/companies")
+    try:
+        request_comapnies = requests.get("http://localhost:8000/companies")
 
-    companies = request_comapnies.json()
+        companies = request_comapnies.json()
 
-    producer = KafkaProducer(
-        bootstrap_servers=["kafka:9093"],
-        value_serializer=lambda v: json.dumps(v).encode("utf-8"),
-    )
+        producer = KafkaProducer(
+            bootstrap_servers=["localhost:9093"],
+            value_serializer=lambda v: json.dumps(v).encode("utf-8"),
+        )
 
-    for company in companies:
-        producer.send("company", value=company)
-        sleep(1)
+        for company in companies:
+            producer.send("company", value=company)
+            sleep(1)
+    except Exception:
+        logger.exception("An exception has occured, please try again later")
 
     return
+
+
+if __name__ == "__main__":
+    produce_company_data()

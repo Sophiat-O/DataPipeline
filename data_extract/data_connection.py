@@ -1,5 +1,5 @@
 import json
-from base_logger import logger
+from data_extract.base_logger import logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
