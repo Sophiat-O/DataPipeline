@@ -1,7 +1,8 @@
+from sqlalchemy import MetaData
 from sqlalchemy import Column, ForeignKey, String, Date, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+Base = declarative_base(metadata=MetaData(schema="staging"))
 
 
 class STGCompany(Base):
