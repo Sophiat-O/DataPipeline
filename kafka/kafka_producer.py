@@ -1,30 +1,25 @@
 import json
-import requests
+import traceback
 from time import sleep
 from .kafka_base_logger import logger
 from kafka import KafkaProducer
 
 
-def produce_company_data():
+def produce_data(topic, topic_value):
     try:
-        request_comapnies = requests.get("http://localhost:8000/companies")
-        companies = request_comapnies.json()
         producer = KafkaProducer(
             bootstrap_servers=["localhost:9093"],
             value_serializer=lambda v: json.dumps(v).encode("utf-8"),
         )
-
         logger.info("Producer Started")
 
-        for company in companies:
-            producer.send("company", value=company)
-            sleep(1)
+        producer.send(topic, topic_value)
+        sleep(1)
+        producer.flush()
 
     except Exception:
-        logger.exception("An exception has occured, try again later")
+        formatted_lines = traceback.format_exc().splitlines()
+        error_type = formatted_lines[-1]
+        logger.error("An exception has occured" + "\n" + error_type)
 
-    return
-
-
-if __name__ == "__main__":
-    produce_company_data()
+    return "Completed"
