@@ -1,4 +1,5 @@
 import json
+import traceback
 from data_extract.base_logger import logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,7 +17,9 @@ def get_session():
         database = connection_detail["db_name"]
         host = connection_detail["host"]
     except Exception:
-        logger.exception("File Not Found")
+        formatted_lines = traceback.format_exc().splitlines()
+        error_type = formatted_lines[-1]
+        logger.error("File Not Found" + "\n" + error_type)
 
     database_url = (
         "mysql+pymysql://" + db_user + ":" + password + "@" + host + "/" + database

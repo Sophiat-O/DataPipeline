@@ -1,14 +1,27 @@
 import json
+import traceback
 from kafka import KafkaConsumer
 from data_load.models import *
 from .kafka_base_logger import logger
 from data_load.orm_load import create_instance
 
 
-def consume_company_data():
+def consume_data():
+    all_topics = [
+        "company",
+        "markets",
+        "geography",
+        "company_stock",
+        "market_index",
+        "index_stock",
+        "gics",
+        "naics",
+        "trbc",
+    ]
+
     try:
         consumer = KafkaConsumer(
-            "company",
+            all_topics,
             bootstrap_servers=["localhost:9093"],
             value_deserializer=lambda x: json.loads(x.decode("utf-8")),
         )
@@ -16,14 +29,37 @@ def consume_company_data():
         logger.info("Now Consuming")
 
         for message in consumer:
-            company_dict = message.value
-            stg_company = create_instance(STGCompany, company_dict)
+            topic = message.topic
+            model = message.value
+
+            if topic == "company":
+                create_instance(STGCompany, model)
+            elif topic == "markets":
+                create_instance(STGMarket, model)
+            elif topic == "geography":
+                create_instance(STGGeography, model)
+            elif topic == "company_stock":
+                create_instance(STGCompanyStock, model)
+            elif topic == "market_index":
+                create_instance(STGMarketIndex, model)
+            elif topic == "index_stock":
+                create_instance(STGIndexStock, model)
+            elif topic == "gics":
+                create_instance(STGGICSClassification, model)
+            elif topic == "naics":
+                create_instance(STGNAICSClassification, model)
+            else:
+                create_instance(STGTRBCClassification, model)
+
+        consumer.close()
 
     except Exception:
-        logger.exception("An exception as occured, try again later")
+        formatted_lines = traceback.format_exc().splitlines()
+        error_type = formatted_lines[-1]
+        logger.error("An exception has occured" + "\n" + error_type)
 
-    return stg_company
+    return "Staging Database Updated"
 
 
 if __name__ == "__main__":
-    consume_company_data()
+    consume_data()
