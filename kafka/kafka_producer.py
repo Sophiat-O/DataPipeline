@@ -1,7 +1,7 @@
 import json
 import traceback
 from time import sleep
-from .kafka_base_logger import logger
+from kafka_base_logger import logger
 from kafka import KafkaProducer
 
 

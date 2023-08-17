@@ -1,6 +1,6 @@
 import json
 import requests
-from .kafka_producer import produce_data
+from kafka_producer import produce_data
 
 
 def stream_api_endpoint():
@@ -14,32 +14,21 @@ def stream_api_endpoint():
     request_naics = requests.get("http://localhost:8000/naics").json()
     request_trbc = requests.get("http://localhost:8000/trbc").json()
 
-    for company in request_comapnies:
-        produce_data("company", company)
+    data = {
+        "company": request_comapnies,
+        "markets": request_markets,
+        "geography": request_geography,
+        "company_stock": request_comp_stock,
+        "market_index": request_mkt_index,
+        "index_stock": request_idx_stock,
+        "gics": request_gics,
+        "naics": request_naics,
+        "trbc": request_trbc,
+    }
 
-    for market in request_markets:
-        produce_data("markets", market)
-
-    for geo in request_geography:
-        produce_data("geography", geo)
-
-    for comp_stock in request_comp_stock:
-        produce_data("company_stock", comp_stock)
-
-    for mkt_index in request_mkt_index:
-        produce_data("market_index", mkt_index)
-
-    for idx_stock in request_idx_stock:
-        produce_data("index_stock", idx_stock)
-
-    for gics in request_gics:
-        produce_data("gics", gics)
-
-    for naics in request_naics:
-        produce_data("naics", naics)
-
-    for trbc in request_trbc:
-        produce_data("trbc", trbc)
+    for key, values in data.items():
+        for value in values:
+            produce_data(key, value)
 
     return "Streamed Data"
 

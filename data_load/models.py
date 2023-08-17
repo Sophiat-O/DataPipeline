@@ -49,7 +49,7 @@ class STGMarket(Base):
 
     id_market = Column(String, primary_key=True, index=True)
     full_name = Column(String)
-    city_code = Column(String, ForeignKey("geography.city_code"))
+    city_code = Column(String, ForeignKey("stg_geography.city_code"))
     founded_date = Column(Date)
     currency = Column(String)
     website = Column(String)
@@ -60,7 +60,6 @@ class STGCompanyStock(Base):
 
     id_company = Column(String, ForeignKey("stg_company.id_company"), primary_key=True)
     id_market = Column(String, ForeignKey("stg_market.id_market"), primary_key=True)
-    city_code = Column(String, ForeignKey("stg_geography.city_code"))
     price_close_date = Column(Date)
     price_close = Column(BigInteger)
     price_open = Column(BigInteger)
@@ -77,7 +76,6 @@ class STGMarketIndex(Base):
     index_full_name = Column(String)
     index_description = Column(String)
     create_date = Column(Date)
-    currency = Column(String)
     id_market = Column(String, ForeignKey("stg_market.id_market"))
 
 
