@@ -1,7 +1,8 @@
 import json
 import traceback
-from kafka import KafkaConsumer
 from data_load.models import *
+from kafka import KafkaConsumer
+from kafka import OffsetAndMetadata
 from kafka_base_logger import logger
 from data_load.orm_load import create_instance
 
@@ -23,6 +24,7 @@ def consume_data():
         consumer = KafkaConsumer(
             bootstrap_servers=["localhost:9093"],
             group_id="stock_data",
+            enable_auto_commit=True,
             value_deserializer=lambda x: json.loads(x.decode("utf-8")),
         )
         consumer.subscribe(all_topics)
@@ -30,7 +32,7 @@ def consume_data():
         logger.info("Subcribed to all Topics")
 
         while True:
-            raw_data = consumer.poll(timeout_ms=100, max_records=200)
+            raw_data = consumer.poll(timeout_ms=100)
 
             for topic_partition, message in raw_data.items():
                 topic = topic_partition.topic
@@ -54,10 +56,6 @@ def consume_data():
                     create_instance(STGNAICSClassification, model)
                 else:
                     create_instance(STGTRBCClassification, model)
-
-                consumer.commit()
-
-            # consumer.close()
 
     except Exception:
         formatted_lines = traceback.format_exc().splitlines()
