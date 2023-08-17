@@ -57,7 +57,6 @@ class CompanyStock(Base):
 
     id_company = Column(String, ForeignKey("company.id_company"), primary_key=True)
     id_market = Column(String, ForeignKey("market.id_market"), primary_key=True)
-    city_code = Column(String, ForeignKey("geography.city_code"))
     price_close_date = Column(Date)
     price_close = Column(BigInteger)
     price_open = Column(BigInteger)
@@ -74,7 +73,6 @@ class MarketIndex(Base):
     index_full_name = Column(String)
     index_description = Column(String)
     create_date = Column(Date)
-    currency = Column(String)
     id_market = Column(String, ForeignKey("market.id_market"))
 
 

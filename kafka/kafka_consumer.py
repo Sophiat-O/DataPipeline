@@ -2,7 +2,7 @@ import json
 import traceback
 from kafka import KafkaConsumer
 from data_load.models import *
-from .kafka_base_logger import logger
+from kafka_base_logger import logger
 from data_load.orm_load import create_instance
 
 
@@ -21,37 +21,43 @@ def consume_data():
 
     try:
         consumer = KafkaConsumer(
-            all_topics,
             bootstrap_servers=["localhost:9093"],
+            group_id="stock_data",
             value_deserializer=lambda x: json.loads(x.decode("utf-8")),
         )
+        consumer.subscribe(all_topics)
 
-        logger.info("Now Consuming")
+        logger.info("Subcribed to all Topics")
 
-        for message in consumer:
-            topic = message.topic
-            model = message.value
+        while True:
+            raw_data = consumer.poll(timeout_ms=100, max_records=200)
 
-            if topic == "company":
-                create_instance(STGCompany, model)
-            elif topic == "markets":
-                create_instance(STGMarket, model)
-            elif topic == "geography":
-                create_instance(STGGeography, model)
-            elif topic == "company_stock":
-                create_instance(STGCompanyStock, model)
-            elif topic == "market_index":
-                create_instance(STGMarketIndex, model)
-            elif topic == "index_stock":
-                create_instance(STGIndexStock, model)
-            elif topic == "gics":
-                create_instance(STGGICSClassification, model)
-            elif topic == "naics":
-                create_instance(STGNAICSClassification, model)
-            else:
-                create_instance(STGTRBCClassification, model)
+            for topic_partition, message in raw_data.items():
+                topic = topic_partition.topic
+                model = message[0].value
 
-        consumer.close()
+                if topic == "company":
+                    create_instance(STGCompany, model)
+                elif topic == "markets":
+                    create_instance(STGMarket, model)
+                elif topic == "geography":
+                    create_instance(STGGeography, model)
+                elif topic == "company_stock":
+                    create_instance(STGCompanyStock, model)
+                elif topic == "market_index":
+                    create_instance(STGMarketIndex, model)
+                elif topic == "index_stock":
+                    create_instance(STGIndexStock, model)
+                elif topic == "gics":
+                    create_instance(STGGICSClassification, model)
+                elif topic == "naics":
+                    create_instance(STGNAICSClassification, model)
+                else:
+                    create_instance(STGTRBCClassification, model)
+
+                consumer.commit()
+
+            # consumer.close()
 
     except Exception:
         formatted_lines = traceback.format_exc().splitlines()
