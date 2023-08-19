@@ -160,6 +160,14 @@ cython_debug/
 !.vscode/launch.json
 !.vscode/extensions.json
 
+#Airflow
+/dags/airflow.cfg
+/dags/logs
+/dags/airflow.db
+/dags/airflow-webserver.pid
+/dags/webserver_config.py
+
+
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
