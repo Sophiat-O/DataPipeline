@@ -154,7 +154,7 @@ cython_debug/
 ./data_app/connection_string.json
 
 ### VisualStudioCode ###
-.vscode/*      # Maybe .vscode/**/* instead - see comments
+.vscode   
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json

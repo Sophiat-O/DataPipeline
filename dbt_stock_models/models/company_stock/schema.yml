@@ -1,0 +1,5 @@
+models:
+  - name: stock
+    latest_version: 1
+  - name: market_stock
+    latest_version: 1

@@ -1,0 +1,11 @@
+dbt_stock_models:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: postgres
+      password: root#123
+      port: 5432
+      database: Consolidation
+      schema: dbt_stock_models
