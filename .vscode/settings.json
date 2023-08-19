@@ -1,7 +1,0 @@
-{
-    "python.testing.pytestArgs": [
-        "data_extract"
-    ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
-}
