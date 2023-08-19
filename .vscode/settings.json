@@ -1,14 +1,7 @@
 {
-    "python.testing.unittestArgs": [
-        "-v",
-        "-s",
-        "./test_data_app",
-        "-p",
-        "test*.py"
-    ],
-    "python.testing.pytestEnabled": true,
-    "python.testing.unittestEnabled": false,
     "python.testing.pytestArgs": [
-        "test_data_app"
-    ]
+        "data_extract"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }
