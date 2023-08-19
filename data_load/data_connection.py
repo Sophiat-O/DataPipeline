@@ -1,25 +1,24 @@
-import json
+import os
 import traceback
+from dotenv import load_dotenv
 from .base_logger import logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+
+load_dotenv()
 
 
 def get_session():
     try:
-        f = open(
-            "/Users/sophie/DataPipeline/DataPipeline/data_load/connection_string.json"
-        )
-        connection_detail = json.load(f)
-        db_user = connection_detail["db_user"]
-        password = connection_detail["db_pass"]
-        database = connection_detail["db_name"]
-        host = connection_detail["host"]
+        db_user = os.getenv("target_db_user")
+        password = os.getenv("target_db_pass")
+        database = os.getenv("target_db_name")
+        host = os.getenv("target_host")
+
     except Exception:
         formatted_lines = traceback.format_exc().splitlines()
         error_type = formatted_lines[-1]
-        logger.error("File Not Found" + "\n" + error_type)
+        logger.error("Invalid variables in .env file" + "\n" + error_type)
 
     database_url = (
         "postgresql+psycopg2://"

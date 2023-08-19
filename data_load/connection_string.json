@@ -1,6 +1,0 @@
-{"db_name":"Consolidation",
-"db_user": "postgres",
-"db_pass": "root#123",
-"host": "Localhost:5432",
-"port": "32769"
-}

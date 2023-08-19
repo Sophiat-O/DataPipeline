@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: stock_model
+    database: Consolidation  
+    schema: staging  
+    tables:
+      - name: stg_company
+      - name: stg_market
+      - name: stg_geography
+      - name: stg_company_stock
+      - name: stg_market_index
+      - name: stg_index_stock
+      - name: stg_gics_classification
+      - name: stg_naics_classification
+      - name: stg_trbc_classificiation
