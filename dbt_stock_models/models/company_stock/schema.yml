@@ -1,5 +1,7 @@
+version: 2
+
 models:
   - name: stock
-    latest_version: 1
+    +sql_header: 'This is the stock model' 
   - name: market_stock
-    latest_version: 1
+    +sql_header: 'This is the market stock model' 

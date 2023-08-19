@@ -1,9 +1,13 @@
 version: 2
 
 sources:
-  - name: stock_model
+  - name: stock_models
     database: Consolidation  
     schema: staging  
+    quoting:
+      database: true 
+      schema: true 
+      identifier: true 
     tables:
       - name: stg_company
       - name: stg_market
@@ -13,4 +17,4 @@ sources:
       - name: stg_index_stock
       - name: stg_gics_classification
       - name: stg_naics_classification
-      - name: stg_trbc_classificiation
+      - name: stg_trbc_classification

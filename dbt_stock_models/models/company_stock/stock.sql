@@ -8,7 +8,7 @@ with dwdb_company as (
             gics_subindustry_code,
             naics_national_industry_code,
             hq_address_citycode
-    from {{ source('stock_model', 'stg_company') }}
+    from {{ source('stock_models', 'stg_company') }}
 ),
 dwdb_geography as(
     select city_code,
@@ -17,7 +17,7 @@ dwdb_geography as(
 	        country,
 	        minor_region,
 	        region 
-    from {{ source('stock_model', 'stg_geography') }}
+    from {{ source('stock_models', 'stg_geography') }}
 ), 
 dwdb_gics_classification as (
 
@@ -26,7 +26,7 @@ dwdb_gics_classification as (
 	    gics_industry ,
 	    gics_industry_group,
 	    gics_sector 
-    from {{source('stock_model', 'stg_gics_classification')}}
+    from {{source('stock_models', 'stg_gics_classification')}}
 ), 
 dwdb_naics_classification as (
 
@@ -36,7 +36,7 @@ dwdb_naics_classification as (
 	        naics_industry_group,
 	        naics_subsector,
             naics_sector
-    from {{source('stock_model', 'stg_naics_classification')}}
+    from {{source('stock_models', 'stg_naics_classification')}}
 ),
 dwdb_trbc_classification as (
 
@@ -46,7 +46,7 @@ dwdb_trbc_classification as (
 	        trbc_industry_group,
 	        trbc_business_sector,
             trbc_econ_sector
-    from {{source('stock_model', 'stg_trbc_classification')}}
+    from {{source('stock_models', 'stg_trbc_classification')}}
 ),
 dwdb_company_stock as (
     select id_company, 
@@ -60,7 +60,7 @@ dwdb_company_stock as (
             volume,
             {{eur_to_dollars('price_high')}} as price_high,
             {{eur_to_dollars('price_low')}} as price_low
-    from {{source('stock_model', 'stg_company_stock')}}
+    from {{source('stock_models', 'stg_company_stock')}}
     where id_market in ('Euronext','FWB')
     UNION
     select id_company, 
@@ -74,7 +74,7 @@ dwdb_company_stock as (
             volume,
             {{skw_to_dollars('price_high')}} as price_high,
             {{skw_to_dollars('price_low') }} as price_low
-    from {{source('stock_model', 'stg_company_stock')}}
+    from {{source('stock_models', 'stg_company_stock')}}
     where id_market ='KSE'
     UNION
     select id_company, 
@@ -88,7 +88,7 @@ dwdb_company_stock as (
             volume,
             {{gbp_to_dollars('price_high')}} as price_high,
             {{gbp_to_dollars('price_low')}} as price_low
-    from {{source('stock_model', 'stg_company_stock')}}
+    from {{source('stock_models', 'stg_company_stock')}}
     where id_market ='LSE'
     UNION
     select id_company, 
@@ -102,7 +102,7 @@ dwdb_company_stock as (
             volume,
             {{yen_to_dollars('price_high')}} as price_high,
             {{yen_to_dollars('price_low')}} as price_low
-    from {{source('stock_model', 'stg_company_stock')}}
+    from {{source('stock_models', 'stg_company_stock')}}
     where id_market ='TSE'
     UNION
     select id_company, 
@@ -116,7 +116,7 @@ dwdb_company_stock as (
             volume,
             {{twn_to_dollars('price_high')}} as price_high,
             {{twn_to_dollars('price_low')}} as price_low
-    from {{source('stock_model', 'stg_company_stock')}}
+    from {{source('stock_models', 'stg_company_stock')}}
     where id_market ='TWSE'
     UNION
     select id_company, 
@@ -130,11 +130,11 @@ dwdb_company_stock as (
             volume,
             price_high,
             price_low
-    from {{source('stock_model', 'stg_company_stock')}}
+    from {{source('stock_models', 'stg_company_stock')}}
     where id_market in ('Nasdaq','NYSE')
 )
 
-select id_company,
+select dwdb_company.id_company,
         company_name, 
         city,
 	    state_province,

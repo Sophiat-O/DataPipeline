@@ -8,4 +8,4 @@ dbt_stock_models:
       password: root#123
       port: 5432
       database: Consolidation
-      schema: dbt_stock_models
+      schema: dw_db
