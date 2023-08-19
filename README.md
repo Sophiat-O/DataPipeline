@@ -9,5 +9,5 @@ This project is set up to simulate a real-time data pipeline
     - FastAPI
 
 - Data Modeling
-<img src="/Users/sophie/DataPipeline/DataPipeline/dbt_img.png" width="128"/>
+<img src="https://github.com/Sophiat-O/DataPipeline/blob/main/dbt_img.png"/>
 
