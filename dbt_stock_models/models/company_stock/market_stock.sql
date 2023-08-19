@@ -1,3 +1,5 @@
+{{ config(materialized='table') }}
+
 with dwdb_market as (
 	select  id_market,
 	        full_name,
