@@ -1,57 +1,100 @@
-import pycountry
-import pandas as pd
-import plotly.express as px
+from get_data import get_geo_data
 import plotly.graph_objects as go
-from db_conn import get_engine
-from dash import Dash, html, dcc
+import plotly.express as px
+from dash import Dash, html, dcc, Input, Output, callback
+import dash_bootstrap_components as dbc
+from dash_bootstrap_templates import (
+    ThemeChangerAIO,
+    template_from_url,
+    load_figure_template,
+)
 
-db_conn = get_engine()
+dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 
-df_company = pd.read_sql("select * from dw_db.stock", con=db_conn)
+df = get_geo_data()
 
-df_geo = (
-    df_company.groupby(["country_code_iso", "country", "price_close_year"])
-    .agg({"price_open": "mean"})
-    .reset_index()
+continents = df["region"].unique()
+
+
+app = Dash(__name__, external_stylesheets=[dbc.themes.SKETCHY])
+
+load_figure_template("SOLAR")
+
+header = html.H4("Stock Market Analysis")
+
+
+checklist = html.Div(
+    [
+        dbc.Label("Select Continents"),
+        dbc.Checklist(
+            id="continents",
+            options=[{"label": i, "value": i} for i in continents],
+            value=continents,
+            inline=True,
+        ),
+    ],
+    className="mb-4",
+)
+
+side_bar = dbc.Card(
+    [
+        checklist,
+    ],
+    body=True,
+)
+
+geo_tree_map = dcc.Graph(id="trees")
+geo_earth_map = dcc.Graph(id="earth")
+
+app.layout = dbc.Container(
+    [
+        header,
+        dbc.Row(
+            [
+                dbc.Col(
+                    [ThemeChangerAIO(aio_id="theme"), side_bar, geo_earth_map], width=5
+                ),
+                dbc.Col([geo_tree_map], width=7),
+            ]
+        ),
+    ],
+    fluid=True,
+    className="dbc",
 )
 
 
-def get_iso_alpha(country):
-    if type(country) != None:
-        country = pycountry.countries.get(alpha_2=country)
-        iso_alpha = country.alpha_3
+@callback(
+    Output("trees", "figure"),
+    Output("earth", "figure"),
+    Input("continents", "value"),
+    Input(ThemeChangerAIO.ids.radio("theme"), "value"),
+)
+def update_line_chart(continent, theme):
+    if continent == []:
+        return []
 
-    return iso_alpha
-
-
-df_geo["iso_alpha"] = df_geo["country_code_iso"].apply(lambda x: get_iso_alpha(x))
-
-fig = go.Figure(
-    data=go.Choropleth(
-        locations=df_geo["iso_alpha"],
-        z=df_geo["price_open"],
-        text=df_geo["country"],
-        colorscale="Blues",
-        autocolorscale=False,
-        reversescale=True,
-        marker_line_color="darkgray",
-        marker_line_width=0.5,
-        colorbar_tickprefix="$",
-        colorbar_title="Average Price Opening",
+    fig = px.scatter_geo(
+        df,
+        locations="iso_alpha",
+        color="region",
+        hover_name="country",
+        size="price_open",
+        scope="world",
+        template=template_from_url(theme),
     )
-)
 
-fig.update_layout(
-    title_text="Stock Market by Region",
-    geo=dict(showframe=False, showcoastlines=False, projection_type="equirectangular"),
-)
+    figs = px.treemap(
+        df,
+        path=[px.Constant("world"), "region", "country", "city"],
+        values="price_open",
+        color="price_open",
+        hover_data=["iso_alpha"],
+        title="Stock Market Analysis",
+        template=template_from_url(theme),
+    )
 
-
-app = Dash(__name__)
-
-
-app.layout = html.Div([html.H1(children="Stock Price Opening"), dcc.Graph(figure=fig)])
+    return figs, fig
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, use_reloader=False)
+    app.run_server(debug=True)
