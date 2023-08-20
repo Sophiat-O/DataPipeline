@@ -12,9 +12,9 @@ This project is set up to simulate a real-time data pipeline
 
 - Data Modeling
     - dbt
-<img src="https://github.com/Sophiat-O/DataPipeline/blob/main/dbt_img.png"/>
+<img src="https://github.com/Sophiat-O/DataPipeline/blob/main/images/dbt_img.png"/>
 
 - Airflow
-<img src="https://github.com/Sophiat-O/DataPipeline/blob/main/dbt_img.png"/>
+<img src="https://github.com/Sophiat-O/DataPipeline/blob/main/images/airflow_img.png"/>
 
 
