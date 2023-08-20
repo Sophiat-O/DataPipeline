@@ -1,36 +1,15 @@
-import pycountry
-import pandas as pd
-import plotly.express as px
+from get_data import get_geo_data
 import plotly.graph_objects as go
-from db_conn import get_engine
+import plotly.express as px
 from dash import Dash, html, dcc
 
-db_conn = get_engine()
-
-df_company = pd.read_sql("select * from dw_db.stock", con=db_conn)
-
-df_geo = (
-    df_company.groupby(["country_code_iso", "country", "price_close_year"])
-    .agg({"price_open": "mean"})
-    .reset_index()
-)
-
-
-def get_iso_alpha(country):
-    if type(country) != None:
-        country = pycountry.countries.get(alpha_2=country)
-        iso_alpha = country.alpha_3
-
-    return iso_alpha
-
-
-df_geo["iso_alpha"] = df_geo["country_code_iso"].apply(lambda x: get_iso_alpha(x))
+df = get_geo_data()
 
 fig = go.Figure(
     data=go.Choropleth(
-        locations=df_geo["iso_alpha"],
-        z=df_geo["price_open"],
-        text=df_geo["country"],
+        locations=df["iso_alpha"],
+        z=df["price_open"],
+        text=df["country"],
         colorscale="Blues",
         autocolorscale=False,
         reversescale=True,
