@@ -71,14 +71,10 @@ dwdb_geo as (select city_code,
 	        minor_region,
 	        region 
     from {{ source('stock_models', 'stg_geography') }}
-),
-dwdb_comp_stock as (
-    select id_market,
-           id_company
-    from {{ref('stock')}}
 )
 
-select full_name,
+select dwdb_market.id_market,
+        full_name,
         city,
         state_province,
         country,
@@ -96,8 +92,6 @@ select full_name,
 from dwdb_market
 join dwdb_geo
 on dwdb_market.city_code = dwdb_geo.city_code
-join dwdb_comp_stock
-on dwdb_comp_stock.id_market = dwdb_market.id_market
 join dwdb_market_index
 on dwdb_market_index.id_market = dwdb_market.id_market
 join dwdb_index_stock
