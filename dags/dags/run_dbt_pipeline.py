@@ -1,7 +1,9 @@
 import os
+import traceback
 from airflow import DAG
 from dotenv import load_dotenv
 from datetime import timedelta
+from base_logger import logger
 from airflow.utils.dates import days_ago
 from airflow.models.baseoperator import chain
 from airflow_dbt.operators.dbt_operator import DbtRunOperator, DbtDocsGenerateOperator
@@ -23,22 +25,28 @@ with DAG(
     dag_id="dbt_pipeline",
     default_args=default_args,
 ) as dag:
-    dbt_run_stock_model = DbtRunOperator(
-        task_id="dbt_run_my_stock_model",
-        select="stock",
-        profiles_dir=default_args["dir"],
-        dir=default_args["dir"],
-    )
+    try:
+        dbt_run_stock_model = DbtRunOperator(
+            task_id="dbt_run_my_stock_model",
+            select="stock",
+            profiles_dir=default_args["dir"],
+            dir=default_args["dir"],
+        )
 
-    dbt_run_market_model = DbtRunOperator(
-        task_id="dbt_run_my_market_model",
-        select="market_stock",
-        profiles_dir=default_args["dir"],
-        dir=default_args["dir"],
-    )
+        dbt_run_market_model = DbtRunOperator(
+            task_id="dbt_run_my_market_model",
+            select="market_stock",
+            profiles_dir=default_args["dir"],
+            dir=default_args["dir"],
+        )
 
-    dbt_docs_generate = DbtDocsGenerateOperator(
-        task_id="dbt_docs_generate",
-    )
+        dbt_docs_generate = DbtDocsGenerateOperator(
+            task_id="dbt_docs_generate",
+        )
 
-    chain(dbt_run_stock_model, dbt_run_market_model, dbt_docs_generate)
+        chain(dbt_run_stock_model, dbt_run_market_model, dbt_docs_generate)
+
+    except Exception:
+        formatted_lines = traceback.format_exc().splitlines()
+        error_type = formatted_lines[-1]
+        logger.error("An exception occured" + "\n" + error_type)

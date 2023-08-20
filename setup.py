@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="data_load",
-    version="0.5",
+    name="DataPipeline",
+    version="0.1",
     packages=find_packages(),
 )
