@@ -18,6 +18,6 @@ This project is set up to simulate a real-time data pipeline
 <img src="https://github.com/Sophiat-O/DataPipeline/blob/main/images/airflow_img.png"/>
 
 - Dashboard
-<img src="https://github.com/Sophiat-O/DataPipeline/blob/main/images/dashboard.png>
+<img src="https://github.com/Sophiat-O/DataPipeline/blob/main/images/dashboard.png"/>
 
 
