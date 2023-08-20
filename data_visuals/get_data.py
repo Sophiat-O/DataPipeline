@@ -2,16 +2,18 @@ import pandas as pd
 from db_conn import get_engine
 from clean_data import get_iso_alpha
 
+db_conn = get_engine()
+sql_stmt = "select * from dw_db.stock"
+
 
 def get_geo_data():
-    db_conn = get_engine()
-
-    df_company = pd.read_sql("select * from dw_db.stock", con=db_conn)
+    df_company = pd.read_sql(sql_stmt, con=db_conn)
 
     df_geo = (
         df_company.groupby(
             [
                 "country_code_iso",
+                "city",
                 "country",
                 "minor_region",
                 "region",
