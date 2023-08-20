@@ -20,8 +20,6 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.SKETCHY])
 
 load_figure_template("SOLAR")
 
-header = html.H4("Stock Market Analysis")
-
 
 checklist = html.Div(
     [
@@ -41,6 +39,24 @@ side_bar = dbc.Card(
         checklist,
     ],
     body=True,
+    style={"width": "71rem", "margin-left": "5px"},
+)
+
+sidebar = html.Div(
+    [
+        html.H4("Stock Market Analysis"),
+        html.Hr(),
+        html.P("Investigating the global stock market"),
+        dbc.Nav(
+            [
+                dbc.NavLink("Geography", href="/", active="exact"),
+                dbc.NavLink("TRBC Industry", href="/trbc-industry", active="exact"),
+                dbc.NavLink("GICS Industry", href="/gics-industry", active="exact"),
+            ],
+            vertical=True,
+            pills=True,
+        ),
+    ]
 )
 
 geo_tree_map = dcc.Graph(id="trees")
@@ -48,13 +64,18 @@ geo_earth_map = dcc.Graph(id="earth")
 
 app.layout = dbc.Container(
     [
-        header,
         dbc.Row(
             [
+                dbc.Col([sidebar], width=3),
                 dbc.Col(
-                    [ThemeChangerAIO(aio_id="theme"), side_bar, geo_earth_map], width=5
+                    [
+                        dbc.Row(
+                            [ThemeChangerAIO(aio_id="theme"), side_bar, geo_tree_map]
+                        ),
+                        dbc.Row([geo_earth_map]),
+                    ],
+                    width=9,
                 ),
-                dbc.Col([geo_tree_map], width=7),
             ]
         ),
     ],
