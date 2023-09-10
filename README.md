@@ -2,6 +2,9 @@
 
 This project is set up to simulate a real-time data pipeline
 
+- System Architecture
+<img src="https://github.com/Sophiat-O/DataPipeline/blob/main/images/system_arc.png"/>
+
 - Tech Stack 
     - Docker: (Kafka, MySQL, PostgreSQL)
     - python
