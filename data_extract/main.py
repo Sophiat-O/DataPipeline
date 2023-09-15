@@ -1,10 +1,8 @@
-from . import models
+import models
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
-
-
-from data_extract.orm_read import get_instance
-from data_extract.data_connection import get_session
+from orm_read import get_instance
+from data_connection import get_session
 
 app = FastAPI()
 

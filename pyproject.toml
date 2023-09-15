@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "datapipeline"
+version = "0.1.0"
+description = "Simulating a Real-Time Data Pipeline Using Kafka, dbt and Airflow"
+authors = ["Sophie"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.103.1"
+airflow-dbt = "^0.4.0"
+confluent-kafka = "^2.2.0"
+pymysql = "^1.1.0"
+SQLAlchemy = "^2.0.20"
+psycopg-binary = "^3.1.10"
+logging = "^0.4.9.6"
+dash = "^2.13.0"
+pandas = "^2.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

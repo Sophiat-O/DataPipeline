@@ -1,7 +1,7 @@
 import os
 import traceback
 from dotenv import load_dotenv
-from data_extract.base_logger import logger
+from base_logger import logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
