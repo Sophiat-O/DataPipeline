@@ -2,19 +2,25 @@ import json
 import traceback
 from time import sleep
 from kafka_base_logger import logger
-from kafka import KafkaProducer
+from confluent_kafka import Producer
+from confluent_kafka import SerializingProducer
 
 
-def produce_data(topic, topic_value):
+def produce_data(topic, value):
     try:
-        producer = KafkaProducer(
-            bootstrap_servers=["localhost:9093"],
-            value_serializer=lambda v: json.dumps(v).encode("utf-8"),
-        )
+        kafka_config = {
+            "bootstrap.servers": "localhost:9093",
+            "enable.idempotence": "true",
+            "acks": "all",
+        }
+
+        producer = Producer(kafka_config)
         logger.info("Producer Started")
 
-        producer.send(topic, topic_value)
-        sleep(1)
+        encode_value = json.dumps(value).encode("utf-8")
+
+        producer.produce(topic, encode_value)
+        producer.poll(100)
         producer.flush()
 
     except Exception:

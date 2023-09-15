@@ -5,6 +5,8 @@ session = Session()
 
 
 def create_instance(model, kwargs, db=session):
-    add_instance = db.add(model(**kwargs))
-    db.commit()
-    return add_instance
+    instance = session.query(model).filter_by(**kwargs).first()
+    if instance is None:
+        add_instance = db.add(model(**kwargs))
+        db.commit()
+    return "Adding Instance To The Database"
